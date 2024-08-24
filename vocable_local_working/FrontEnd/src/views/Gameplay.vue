@@ -14,6 +14,7 @@ const state = reactive({
     found: [],
     hint: [],
   },
+  statsSaved: false,
 });
 
 // Computed per verificare se il gioco è stato vinto o perso
@@ -30,15 +31,16 @@ const refreshPage = () => {
 
 // Funzione per gestire l'input da tastiera
 const handleInput = (key) => {
+  if(!state.statsSaved){
   // Controlla se il gioco è terminato
-  if (wonGame.value || lostGame.value) {
+  if ((wonGame.value || lostGame.value) && !state.statsSaved) {
     console.log('Il gioco è terminato. Aggiorno le statistiche...');
     updateUserStats(wonGame.value, state.currentGuessIndex); // Aggiorna le statistiche
+    state.statsSaved = true;
     return;
   }
 
   const currentGuess = state.guesses[state.currentGuessIndex];
-
   // Gestione del tasto "enter"
   if (key == "{enter}") {
     if (currentGuess.length == state.solution.word.length) {
@@ -55,9 +57,10 @@ const handleInput = (key) => {
       state.currentGuessIndex++;
 
       // Controllo immediato di vittoria o sconfitta
-      if (wonGame.value || lostGame.value) {
+      if ((wonGame.value || lostGame.value)&& !state.statsSaved) {
         console.log('Il gioco è terminato. Aggiorno le statistiche...');
         updateUserStats(wonGame.value, state.currentGuessIndex); // Aggiorna le statistiche
+        state.statsSaved = true;
       }
     }
   } 
@@ -72,6 +75,7 @@ const handleInput = (key) => {
       state.guesses[state.currentGuessIndex] += key.toLowerCase();
     }
   }
+}
 };
 
 // Funzione per aggiornare le statistiche dell'utente

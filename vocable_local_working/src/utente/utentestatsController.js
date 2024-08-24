@@ -65,13 +65,16 @@ var updateUtentestatsControllerFn = async (req, res) => {
         if (!stats) {
             return res.status(404).json({ msg: 'Statistiche irreperibili' });
         }
-
+        console.log('before')
+        console.log(stats)
         stats.totalgames += 1;
         stats.gameswon += won ? 1 : 0;
         stats.gameslost += won ? 0 : 1;
         stats[`won${attempts}`] += won ? 1 : 0;
 
         await stats.save();
+        console.log('after')
+        console.log(stats)
 
         res.json({ status: true, message: 'Statistiche aggiornate con successo' });
     } catch (error) {
